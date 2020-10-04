@@ -219,7 +219,7 @@ class Rojinegros {
                 int anterior = dir;
                 Nodo w,v;
                 g = p; 
-                p= g; 
+                p= q; 
                 if (anterior == 0) {
                     v = p.der; 
                 }
