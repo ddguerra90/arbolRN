@@ -5,6 +5,10 @@
  */
 package arbolesrn;
 
+import java.awt.List;
+import java.util.ArrayList;
+import javax.swing.JLabel;
+
 /**
  *
  * @author Administrador
@@ -13,10 +17,20 @@ class Rojinegros {
     Nodo raiz, z;
     final int NEGRO = 0; 
     final int ROJO = 1; 
+    int num = 0;
+    ArrayList<String> inordenData = new ArrayList<String>();
     public Nodo Raiz() 
     { 
         return raiz; 
     } 
+    
+    public ArrayList<String> data(){
+        return inordenData;
+    }
+    public void cleanData(){
+        inordenData.clear();
+    }
+    
     
     void inicializar () {
     z = new Nodo(0, NEGRO);
@@ -109,15 +123,35 @@ class Rojinegros {
         return x; 
     } 
 
-    void inorden (Nodo p) { 
+    void inorden (Nodo p, int j, String s) { 
+        
+        //System.out.println("ll "+p.llave);
         if (p != z) { 
-            inorden (p.izq);
+            inorden (p.izq, j+1,"i");
             if (p.color == ROJO) {
-                System.out.print( " " + p.llave + "" + "R");
+                inordenData.add(p.llave + "-" + "R"+"-"+j+"-"+s);
+                System.out.print( " " + p.llave + "-" + "R"+"-"+j+"-"+s);
+                if((j != 0 && num == 0) || j>num ){
+                    num = j;
+                }  
             }
-            else System.out.print( " " + p.llave + "" + "N"); 
-            inorden (p.der); 
+            else{ 
+                System.out.print( " " + p.llave + "-" + "N"+"-"+j+"-"+s); 
+                inordenData.add(p.llave + "-" + "N"+"-"+j+"-"+s);
+
+                //num = (j != 0 && num == 0) ? j : 0;
+                 if((j != 0 && num == 0)  || j>num ) {
+                    num = j;
+                }
+                
+            }
+            inorden (p.der, j+1,"d"); 
         }
+        else{
+            System.out.print(" "+"0-N-"+j+"-"+s);
+            inordenData.add("0-N-"+j+"-"+s);
+        }
+        //System.out.println("numero mayor "+num);
     } 
 
     void preorden (Nodo p) { 
@@ -185,7 +219,7 @@ class Rojinegros {
                 int anterior = dir;
                 Nodo w,v;
                 g = p; 
-                p= g; 
+                p= q; 
                 if (anterior == 0) {
                     v = p.der; 
                 }

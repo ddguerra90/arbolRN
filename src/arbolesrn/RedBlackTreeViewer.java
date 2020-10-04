@@ -205,11 +205,12 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
         numInserta.setBounds(0, 0, 90, 25);
         eliminar.setBounds(200, 0, 80, 25);
 
+
         panel.add(insertar);
         panel.add(numInserta);
         panel.add(dibujar);
         panel.add(eliminar);
-
+  
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 300);
         SwingUtilities.invokeLater(new Runnable() {
