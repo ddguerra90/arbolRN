@@ -5,17 +5,47 @@
  */
 package arbolesrn;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author Administrador
  */
 public class RedBlackTreeViewer extends javax.swing.JFrame {
 
+    static int i = 90;
+
     /**
      * Creates new form RedBlackTreeViewer
      */
     public RedBlackTreeViewer() {
         initComponents();
+    }
+
+    @Override
+    public void paintComponents(Graphics g) {
+        super.paintComponents(g);
+        g.drawString("hola", 0, 0);
+    }
+
+    public static int dis() {
+        i += 18;
+        return i;
     }
 
     /**
@@ -47,6 +77,7 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -71,11 +102,147 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+ /* java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new RedBlackTreeViewer().setVisible(true);
             }
+        });*/
+        Rojinegros arbol = new Rojinegros();
+
+        InputStreamReader entrada = new InputStreamReader(System.in);
+        BufferedReader teclado = new BufferedReader(entrada);
+
+        arbol.inicializar();
+        String aux;
+        //int v;
+
+        final JFrame frame = new JFrame("Test");
+        frame.setLayout(new GridLayout(0, 1));
+        JPanel panel = new JPanel();
+        panel.setLayout(null);
+        frame.add(panel);
+        //int i = 90;
+        JButton insertar = new JButton("Insertar");
+        JButton dibujar = new JButton("Dibujar");
+        JTextField numInserta = new JTextField();
+
+        insertar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int v;
+                v = Integer.parseInt(numInserta.getText());
+                arbol.insertar(v);
+                arbol.num = 0;
+                /*
+                System.out.println("si");
+                JLabel a = new JLabel("si");
+                int j;
+                j = dis();
+                a.setBounds(j,10,20,20);
+                panel.add(a);
+                panel.updateUI();
+                panel.repaint();*/
+            }
+
         });
+
+        dibujar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                arbol.inorden(arbol.Raiz(), 0, "a");
+                System.out.println("array");
+                //JPanel panelDibujo = new JPanel();
+                //panelDibujo.setBounds(0,90,200,200);
+                //JLabel ps = new JLabel("dddd");
+                //ps.setBounds(30,30,50,50);
+                //panelDibujo.add(ps);
+                //panel.add(panelDibujo);
+                panel.removeAll();
+                 panel.add(insertar);
+                panel.add(numInserta);
+                
+                panel.add(dibujar);
+
+                                
+                pintar(arbol.num, arbol.data(), panel);
+                /*for (int i = 2; i < arbol.inordenData.size(); i++) {
+                    String[] parts = arbol.inordenData.get(i).split(".");
+                    System.out.print(" " + arbol.inordenData.get(i));
+                }*/
+                panel.updateUI();
+                panel.repaint();
+               // panelDibujo.updateUI();
+               // panelDibujo.repaint();
+                
+                arbol.cleanData();
+            }
+
+        });
+        insertar.setBounds(100, 0, 80, 25);
+        dibujar.setBounds(0, 30, 80, 25);
+        numInserta.setBounds(0, 0, 90, 25);
+
+        panel.add(insertar);
+        panel.add(numInserta);
+        panel.add(dibujar);
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 300);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                frame.setVisible(true);
+            }
+        });
+
+    }
+
+    static void pintar(int size, ArrayList<String> nodo, JPanel panel) {
+        int aa = 0;
+        int bb = 15;
+        int cc = 45;
+        int dd = 105;
+        int ee = 55;
+        for (int i = 2; i < nodo.size(); i++) {
+            String nodoPuntos = nodo.get(i);
+            String[] parts = nodoPuntos.split("-");
+            JLabel a = new JLabel(parts[0]);
+            if (parts[1] == "R") {
+                a.setForeground(Color.red);
+            }else{
+                a.setForeground(Color.black);
+            }
+            int position = size - Integer.parseInt(parts[2]);
+            switch(position){
+                case 0:
+                    a.setBounds(aa,size*45,30,30);
+                    aa = aa+30;
+                    break;
+                case 1:
+                    a.setBounds(bb,(size-1)*45,30,30);
+                    bb = bb+45;
+                    break;
+                case 2: 
+                    a.setBounds(cc,(size-2)*45,30,30);
+                    cc = cc + 105;
+                    break;
+                case 3: 
+                    a.setBounds(dd,(size-3)*45,30,30);
+                    dd = dd + 45;
+                    break;
+                case 4:
+                    a.setBounds(ee,(size-4)*45,30,30);
+                    ee = ee + 55;
+                    break;
+            }
+            panel.add(a);
+            
+            System.out.print(" " + nodo.get(i));
+        }
+        //panel.updateUI();
+        //panel.repaint();
+     
+        System.out.println("a");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

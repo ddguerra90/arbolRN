@@ -5,6 +5,9 @@
  */
 package arbolesrn;
 
+import java.awt.Label;
+import javax.swing.JLabel;
+
 /**
  *
  * @author Administrador
@@ -28,27 +31,18 @@ public class arbolrn extends javax.swing.JFrame {
     private void initComponents() {
 
         panel1 = new java.awt.Panel();
-        label1 = new java.awt.Label();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        label1.setText("ahahah");
 
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
         panel1Layout.setHorizontalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel1Layout.createSequentialGroup()
-                .addGap(52, 52, 52)
-                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(302, Short.MAX_VALUE))
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel1Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(205, Short.MAX_VALUE))
+            .addGap(0, 253, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -96,14 +90,21 @@ public class arbolrn extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new arbolrn().setVisible(true);
+                pintar();
+            }
+
+            private void pintar() {
+                JLabel a = null;
+                a.setText("si");
+                
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private java.awt.Label label1;
     private java.awt.Panel panel1;
     // End of variables declaration//GEN-END:variables
 }

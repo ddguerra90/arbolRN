@@ -37,9 +37,15 @@ public class ArbolesRN {
             v = Integer.parseInt(aux);
             while (v != 9999) {
                 arbol.insertar(v);
-                arbol.inorden(arbol.Raiz());
-                System.out.println("");
-                arbol.preorden(arbol.Raiz());
+                arbol.num = 0;
+                arbol.inorden(arbol.Raiz(),0,"a");
+               // System.out.println("num may " +arbol.num);
+
+                System.out.println(" array ");
+                for (int i = 0; i < arbol.inordenData.size(); i++) {
+                    System.out.print(" "+arbol.inordenData.get(i));
+                }
+                //arbol.preorden(arbol.Raiz());
                 System.out.println("");
                 System.out.println("--------------");
                 System.out.println("Digite Nero. 9999 para terminar");
@@ -59,7 +65,7 @@ public class ArbolesRN {
             v = Integer.parseInt(aux);
             while (v != 9999) {
                 arbol.eliminar(arbol.Raiz(), v);
-                arbol.inorden(arbol.Raiz());
+                arbol.inorden(arbol.Raiz(),0,"a");
                 System.out.println("");
                 arbol.preorden(arbol.Raiz());
                 System.out.println("");
