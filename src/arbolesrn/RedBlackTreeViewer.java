@@ -207,7 +207,7 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
             String nodoPuntos = nodo.get(i);
             String[] parts = nodoPuntos.split("-");
             JLabel a = new JLabel(parts[0]);
-            if (parts[1] == "R") {
+            if ("R".equals(parts[1])) {
                 a.setForeground(Color.red);
             }else{
                 a.setForeground(Color.black);
