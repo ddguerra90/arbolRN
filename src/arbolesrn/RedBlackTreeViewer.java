@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -40,6 +41,14 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
      */
     public RedBlackTreeViewer() {
         initComponents();
+    }
+
+
+    @Override
+    public void paintComponents(Graphics g) {
+        super.paintComponents(g);
+        g.drawString("hola", 0, 0);
+        g.drawLine(20, 30,30 , 40);
     }
 
     public static int dis() {
@@ -122,7 +131,7 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
         arbol.inicializar();
         String aux;
         //int v;
-
+        
         final JFrame frame = new JFrame("Test");
         frame.setLayout(new GridLayout(0, 1));
         panel = new JPanel();
@@ -133,13 +142,18 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
         JButton eliminar = new JButton("Eliminar");
         JButton dibujar = new JButton("Dibujar");
         JTextField numInserta = new JTextField();
-
+        JTextField nameInsert = new JTextField();
+        
+        JTextField imprimirOrden = new JTextField();
+        JButton btnPreorden = new JButton("Preorden");
         insertar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int v;
+                String name;
+                name = nameInsert.getText();
                 v = Integer.parseInt(numInserta.getText());
-                arbol.insertar(v);
+                arbol.insertar(v,name);
                 arbol.num = 0;
                 /*
                 System.out.println("si");
@@ -174,7 +188,16 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
             }
 
         });
-
+        
+        btnPreorden.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                arbol.preorden(arbol.Raiz());
+                String preOrdenPuntos = String.valueOf(arbol.preordenData);
+                imprimirOrden.setText(preOrdenPuntos);
+            }
+        });
+        
         dibujar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -189,8 +212,12 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
                 panel.removeAll();
                 panel.add(insertar);
                 panel.add(numInserta);
+                panel.add(nameInsert);
                 panel.add(eliminar);
                 panel.add(dibujar);
+
+                panel.add(imprimirOrden);
+                panel.add(btnPreorden);
 
                 pintar(arbol.num, arbol.data(), panel);
                 /*for (int i = 2; i < arbol.inordenData.size(); i++) {
@@ -208,14 +235,25 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
 
         });
         insertar.setBounds(100, 0, 80, 25);
-        dibujar.setBounds(0, 30, 80, 25);
+        dibujar.setBounds(100, 30, 80, 25);
         numInserta.setBounds(0, 0, 90, 25);
         eliminar.setBounds(200, 0, 80, 25);
 
+        nameInsert.setBounds(0, 30, 90, 25);
+        
+        imprimirOrden.setBounds(300, 0, 200, 25);
+        btnPreorden.setBounds(300, 30, 80, 25);
+
         panel.add(insertar);
         panel.add(numInserta);
+        panel.add(nameInsert);
+
         panel.add(dibujar);
         panel.add(eliminar);
+
+        
+        panel.add(imprimirOrden);
+        panel.add(btnPreorden);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 300);
@@ -229,7 +267,9 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
 
     }
 
-    static void pintar(int size, ArrayList<String> nodo, JPanel panel) {
+
+ static void pintar(int size, ArrayList<String> nodo, JPanel panel) {
+
 
         List<Integer> posIniciales = new ArrayList<Integer>(size);
         List<Integer> saltos = new ArrayList<Integer>(size);
@@ -248,20 +288,31 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
             String nodoPuntos = nodo.get(i);
             String[] parts = nodoPuntos.split("-");
             JLabel a = new JLabel(parts[0]);
+            JLabel b = new JLabel(parts[4]);
             if ("R".equals(parts[1])) {
                 a.setForeground(Color.red);
+
+                b.setForeground(Color.red);
+
             } else {
                 a.setForeground(Color.black);
+                b.setForeground(Color.black);
             }
             int position = size - Integer.parseInt(parts[2]);
             
             if (position >= 0) {
                 a.setBounds((int) posIniciales.get(position), (size - position) * 45, 30, 30);
 
+                b.setBounds((int) posIniciales.get(position), ((size - position) * 45)+10, 30, 30);
+
+
                 posIniciales.set(position, posIniciales.get(position) + saltos.get(position));
             }
             
             panel.add(a);
+
+            panel.add(b);
+
 
             System.out.print(" " + nodo.get(i));
         }
