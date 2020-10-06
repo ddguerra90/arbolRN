@@ -5,15 +5,19 @@
  */
 package arbolesrn;
 
+import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Line2D;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -29,18 +33,13 @@ import javax.swing.SwingUtilities;
 public class RedBlackTreeViewer extends javax.swing.JFrame {
 
     static int i = 90;
+    static JPanel panel;
 
     /**
      * Creates new form RedBlackTreeViewer
      */
     public RedBlackTreeViewer() {
         initComponents();
-    }
-
-    @Override
-    public void paintComponents(Graphics g) {
-        super.paintComponents(g);
-        g.drawString("hola", 0, 0);
     }
 
     public static int dis() {
@@ -62,12 +61,12 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 300, Short.MAX_VALUE)
         );
 
         pack();
@@ -76,6 +75,14 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
+    @Override
+    public void paint(Graphics gp) {
+        super.paint(gp);
+        Graphics2D graphics = (Graphics2D) gp;
+        Line2D line = new Line2D.Float(200, 150, 150, 220);
+        graphics.draw(line);
+    }
+
     public static void main(String args[]) {
 
         /* Set the Nimbus look and feel */
@@ -118,7 +125,7 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
 
         final JFrame frame = new JFrame("Test");
         frame.setLayout(new GridLayout(0, 1));
-        JPanel panel = new JPanel();
+        panel = new JPanel();
         panel.setLayout(null);
         frame.add(panel);
         //int i = 90;
@@ -146,7 +153,7 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
             }
 
         });
-        
+
         eliminar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -154,7 +161,7 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
                 v = Integer.parseInt(numInserta.getText());
                 arbol.eliminar(arbol.Raiz(), v);
                 arbol.num = 0;
-                
+
                 System.out.println("si");
                 /*
                 JLabel a = new JLabel("si");
@@ -180,22 +187,22 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
                 //panelDibujo.add(ps);
                 //panel.add(panelDibujo);
                 panel.removeAll();
-                 panel.add(insertar);
+                panel.add(insertar);
                 panel.add(numInserta);
                 panel.add(eliminar);
                 panel.add(dibujar);
 
-                                
                 pintar(arbol.num, arbol.data(), panel);
                 /*for (int i = 2; i < arbol.inordenData.size(); i++) {
                     String[] parts = arbol.inordenData.get(i).split(".");
                     System.out.print(" " + arbol.inordenData.get(i));
                 }*/
-                panel.updateUI();
+                // panel.updateUI();
+                // panelDibujo.updateUI();
+                // panelDibujo.repaint();
                 panel.repaint();
-               // panelDibujo.updateUI();
-               // panelDibujo.repaint();
-                
+
+                //lineas();
                 arbol.cleanData();
             }
 
@@ -205,12 +212,11 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
         numInserta.setBounds(0, 0, 90, 25);
         eliminar.setBounds(200, 0, 80, 25);
 
-
         panel.add(insertar);
         panel.add(numInserta);
         panel.add(dibujar);
         panel.add(eliminar);
-  
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 300);
         SwingUtilities.invokeLater(new Runnable() {
@@ -218,58 +224,56 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
             public void run() {
                 frame.setVisible(true);
             }
+
         });
 
     }
 
     static void pintar(int size, ArrayList<String> nodo, JPanel panel) {
-        int aa = 0;
-        int bb = 15;
-        int cc = 45;
-        int dd = 105;
-        int ee = 55;
+
+        List<Integer> posIniciales = new ArrayList<Integer>(size);
+        List<Integer> saltos = new ArrayList<Integer>(size);
+
+        int val = 0;
+        int anterior = 15;
+        for (int j = 0; j < size; j++) {
+            posIniciales.add(j, val);
+            val = val + anterior;
+            anterior = anterior * 2;
+            saltos.add(j, anterior);
+        }
+
         for (int i = 2; i < nodo.size(); i++) {
+
             String nodoPuntos = nodo.get(i);
             String[] parts = nodoPuntos.split("-");
             JLabel a = new JLabel(parts[0]);
             if ("R".equals(parts[1])) {
                 a.setForeground(Color.red);
-            }else{
+            } else {
                 a.setForeground(Color.black);
             }
             int position = size - Integer.parseInt(parts[2]);
-            switch(position){
-                case 0:
-                    a.setBounds(aa,size*45,30,30);
-                    aa = aa+30;
-                    break;
-                case 1:
-                    a.setBounds(bb,(size-1)*45,30,30);
-                    bb = bb+45;
-                    break;
-                case 2: 
-                    a.setBounds(cc,(size-2)*45,30,30);
-                    cc = cc + 105;
-                    break;
-                case 3: 
-                    a.setBounds(dd,(size-3)*45,30,30);
-                    dd = dd + 45;
-                    break;
-                case 4:
-                    a.setBounds(ee,(size-4)*45,30,30);
-                    ee = ee + 55;
-                    break;
-            }
-            panel.add(a);
             
+            if (position >= 0) {
+                a.setBounds((int) posIniciales.get(position), (size - position) * 45, 30, 30);
+
+                posIniciales.set(position, posIniciales.get(position) + saltos.get(position));
+            }
+            
+            panel.add(a);
+
             System.out.print(" " + nodo.get(i));
         }
         //panel.updateUI();
         //panel.repaint();
-     
         System.out.println("a");
     }
 
     // Variables declaration - do not modify                     
     // End of variables declaration                   
+    private void draw(Graphics g) {
+        g.drawLine(80, 80, 300, 300);
+    }
+
 }
