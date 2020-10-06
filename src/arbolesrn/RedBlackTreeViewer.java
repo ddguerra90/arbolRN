@@ -6,6 +6,7 @@
  */
 package arbolesrn;
 
+import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -13,6 +14,7 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Line2D;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ import javax.swing.SwingUtilities;
 public class RedBlackTreeViewer extends javax.swing.JFrame {
 
     static int i = 90;
+    static JPanel panel;
 
     /**
      * Creates new form RedBlackTreeViewer
@@ -39,6 +42,7 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
     public RedBlackTreeViewer() {
         initComponents();
     }
+
 
     @Override
     public void paintComponents(Graphics g) {
@@ -66,12 +70,12 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 300, Short.MAX_VALUE)
         );
 
         pack();
@@ -80,6 +84,14 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
+    @Override
+    public void paint(Graphics gp) {
+        super.paint(gp);
+        Graphics2D graphics = (Graphics2D) gp;
+        Line2D line = new Line2D.Float(200, 150, 150, 220);
+        graphics.draw(line);
+    }
+
     public static void main(String args[]) {
 
         /* Set the Nimbus look and feel */
@@ -122,7 +134,7 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
         
         final JFrame frame = new JFrame("Test");
         frame.setLayout(new GridLayout(0, 1));
-        JPanel panel = new JPanel();
+        panel = new JPanel();
         panel.setLayout(null);
         frame.add(panel);
         //int i = 90;
@@ -155,7 +167,7 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
             }
 
         });
-        
+
         eliminar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -163,7 +175,7 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
                 v = Integer.parseInt(numInserta.getText());
                 arbol.eliminar(arbol.Raiz(), v);
                 arbol.num = 0;
-                
+
                 System.out.println("si");
                 /*
                 JLabel a = new JLabel("si");
@@ -206,17 +218,18 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
 
                 panel.add(imprimirOrden);
                 panel.add(btnPreorden);
-                
+
                 pintar(arbol.num, arbol.data(), panel);
                 /*for (int i = 2; i < arbol.inordenData.size(); i++) {
                     String[] parts = arbol.inordenData.get(i).split(".");
                     System.out.print(" " + arbol.inordenData.get(i));
                 }*/
-                panel.updateUI();
+                // panel.updateUI();
+                // panelDibujo.updateUI();
+                // panelDibujo.repaint();
                 panel.repaint();
-               // panelDibujo.updateUI();
-               // panelDibujo.repaint();
-                
+
+                //lineas();
                 arbol.cleanData();
             }
 
@@ -225,22 +238,23 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
         dibujar.setBounds(100, 30, 80, 25);
         numInserta.setBounds(0, 0, 90, 25);
         eliminar.setBounds(200, 0, 80, 25);
+
         nameInsert.setBounds(0, 30, 90, 25);
         
         imprimirOrden.setBounds(300, 0, 200, 25);
         btnPreorden.setBounds(300, 30, 80, 25);
-        
+
         panel.add(insertar);
         panel.add(numInserta);
         panel.add(nameInsert);
 
         panel.add(dibujar);
         panel.add(eliminar);
+
         
         panel.add(imprimirOrden);
         panel.add(btnPreorden);
-        
-        
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 300);
         SwingUtilities.invokeLater(new Runnable() {
@@ -248,11 +262,14 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
             public void run() {
                 frame.setVisible(true);
             }
+
         });
 
     }
 
+
  static void pintar(int size, ArrayList<String> nodo, JPanel panel) {
+
 
         List<Integer> posIniciales = new ArrayList<Integer>(size);
         List<Integer> saltos = new ArrayList<Integer>(size);
@@ -274,7 +291,9 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
             JLabel b = new JLabel(parts[4]);
             if ("R".equals(parts[1])) {
                 a.setForeground(Color.red);
+
                 b.setForeground(Color.red);
+
             } else {
                 a.setForeground(Color.black);
                 b.setForeground(Color.black);
@@ -283,13 +302,17 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
             
             if (position >= 0) {
                 a.setBounds((int) posIniciales.get(position), (size - position) * 45, 30, 30);
+
                 b.setBounds((int) posIniciales.get(position), ((size - position) * 45)+10, 30, 30);
+
 
                 posIniciales.set(position, posIniciales.get(position) + saltos.get(position));
             }
             
             panel.add(a);
+
             panel.add(b);
+
 
             System.out.print(" " + nodo.get(i));
         }
@@ -300,4 +323,8 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
 
     // Variables declaration - do not modify                     
     // End of variables declaration                   
+    private void draw(Graphics g) {
+        g.drawLine(80, 80, 300, 300);
+    }
+
 }
