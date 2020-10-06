@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -8,12 +9,14 @@ package arbolesrn;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -41,6 +44,7 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
     public void paintComponents(Graphics g) {
         super.paintComponents(g);
         g.drawString("hola", 0, 0);
+        g.drawLine(20, 30,30 , 40);
     }
 
     public static int dis() {
@@ -115,7 +119,7 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
         arbol.inicializar();
         String aux;
         //int v;
-
+        
         final JFrame frame = new JFrame("Test");
         frame.setLayout(new GridLayout(0, 1));
         JPanel panel = new JPanel();
@@ -126,13 +130,18 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
         JButton eliminar = new JButton("Eliminar");
         JButton dibujar = new JButton("Dibujar");
         JTextField numInserta = new JTextField();
-
+        JTextField nameInsert = new JTextField();
+        
+        JTextField imprimirOrden = new JTextField();
+        JButton btnPreorden = new JButton("Preorden");
         insertar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int v;
+                String name;
+                name = nameInsert.getText();
                 v = Integer.parseInt(numInserta.getText());
-                arbol.insertar(v);
+                arbol.insertar(v,name);
                 arbol.num = 0;
                 /*
                 System.out.println("si");
@@ -167,7 +176,16 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
             }
 
         });
-
+        
+        btnPreorden.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                arbol.preorden(arbol.Raiz());
+                String preOrdenPuntos = String.valueOf(arbol.preordenData);
+                imprimirOrden.setText(preOrdenPuntos);
+            }
+        });
+        
         dibujar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -180,12 +198,15 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
                 //panelDibujo.add(ps);
                 //panel.add(panelDibujo);
                 panel.removeAll();
-                 panel.add(insertar);
+                panel.add(insertar);
                 panel.add(numInserta);
+                panel.add(nameInsert);
                 panel.add(eliminar);
                 panel.add(dibujar);
 
-                                
+                panel.add(imprimirOrden);
+                panel.add(btnPreorden);
+                
                 pintar(arbol.num, arbol.data(), panel);
                 /*for (int i = 2; i < arbol.inordenData.size(); i++) {
                     String[] parts = arbol.inordenData.get(i).split(".");
@@ -201,16 +222,25 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
 
         });
         insertar.setBounds(100, 0, 80, 25);
-        dibujar.setBounds(0, 30, 80, 25);
+        dibujar.setBounds(100, 30, 80, 25);
         numInserta.setBounds(0, 0, 90, 25);
         eliminar.setBounds(200, 0, 80, 25);
-
-
+        nameInsert.setBounds(0, 30, 90, 25);
+        
+        imprimirOrden.setBounds(300, 0, 200, 25);
+        btnPreorden.setBounds(300, 30, 80, 25);
+        
         panel.add(insertar);
         panel.add(numInserta);
+        panel.add(nameInsert);
+
         panel.add(dibujar);
         panel.add(eliminar);
-  
+        
+        panel.add(imprimirOrden);
+        panel.add(btnPreorden);
+        
+        
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 300);
         SwingUtilities.invokeLater(new Runnable() {
@@ -222,51 +252,49 @@ public class RedBlackTreeViewer extends javax.swing.JFrame {
 
     }
 
-    static void pintar(int size, ArrayList<String> nodo, JPanel panel) {
-        int aa = 0;
-        int bb = 15;
-        int cc = 45;
-        int dd = 105;
-        int ee = 55;
+ static void pintar(int size, ArrayList<String> nodo, JPanel panel) {
+
+        List<Integer> posIniciales = new ArrayList<Integer>(size);
+        List<Integer> saltos = new ArrayList<Integer>(size);
+
+        int val = 0;
+        int anterior = 15;
+        for (int j = 0; j < size; j++) {
+            posIniciales.add(j, val);
+            val = val + anterior;
+            anterior = anterior * 2;
+            saltos.add(j, anterior);
+        }
+
         for (int i = 2; i < nodo.size(); i++) {
+
             String nodoPuntos = nodo.get(i);
             String[] parts = nodoPuntos.split("-");
             JLabel a = new JLabel(parts[0]);
+            JLabel b = new JLabel(parts[4]);
             if ("R".equals(parts[1])) {
                 a.setForeground(Color.red);
-            }else{
+                b.setForeground(Color.red);
+            } else {
                 a.setForeground(Color.black);
+                b.setForeground(Color.black);
             }
             int position = size - Integer.parseInt(parts[2]);
-            switch(position){
-                case 0:
-                    a.setBounds(aa,size*45,30,30);
-                    aa = aa+30;
-                    break;
-                case 1:
-                    a.setBounds(bb,(size-1)*45,30,30);
-                    bb = bb+45;
-                    break;
-                case 2: 
-                    a.setBounds(cc,(size-2)*45,30,30);
-                    cc = cc + 105;
-                    break;
-                case 3: 
-                    a.setBounds(dd,(size-3)*45,30,30);
-                    dd = dd + 45;
-                    break;
-                case 4:
-                    a.setBounds(ee,(size-4)*45,30,30);
-                    ee = ee + 55;
-                    break;
-            }
-            panel.add(a);
             
+            if (position >= 0) {
+                a.setBounds((int) posIniciales.get(position), (size - position) * 45, 30, 30);
+                b.setBounds((int) posIniciales.get(position), ((size - position) * 45)+10, 30, 30);
+
+                posIniciales.set(position, posIniciales.get(position) + saltos.get(position));
+            }
+            
+            panel.add(a);
+            panel.add(b);
+
             System.out.print(" " + nodo.get(i));
         }
         //panel.updateUI();
         //panel.repaint();
-     
         System.out.println("a");
     }
 
